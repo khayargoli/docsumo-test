@@ -9,7 +9,7 @@ interface FieldsSidebarProps {
     setActiveTab: (tab: 'regular' | 'column') => void;
     hoveredId: number | null;
     setHoveredId: (id: number | null) => void;
-    positionMap: Record<string, number[]>;
+    positionMap: Map<string, number[]>;
     setShowConfirm: (show: boolean) => void;
 }
 
@@ -26,7 +26,7 @@ export const FieldsSidebar = ({
     const removedIds = useAppSelector(state => state.fields.removedIds);
     const dispatch = useAppDispatch();
 
-
+    /* Handling line items */
     const renderLineItemFieldAsFields = (lineItem: LineItemField) => {
         return lineItem.children.map(block => (
             block.map(row => (
@@ -84,7 +84,6 @@ export const FieldsSidebar = ({
                             if (activeTab === 'column' && field.type === 'line_item') {
                                 return renderLineItemFieldAsFields(field as LineItemField);
                             }
-
                             return null;
                         })}
                     </ul>
@@ -95,7 +94,7 @@ export const FieldsSidebar = ({
                 <button
                     className="px-4 py-1 text-sm rounded bg-green-500 hover:bg-green-200"
                     onClick={() => {
-                        const allIds = Object.keys(positionMap).filter(id => !removedIds.includes(parseInt(id)));
+                        const allIds = [...positionMap.keys()].filter(id => !removedIds.includes(parseInt(id)));
                         const allSelected = allIds.every(id => selectedIds.includes(parseInt(id)));
 
                         if (allSelected) {

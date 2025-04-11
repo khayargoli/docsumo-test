@@ -1,35 +1,30 @@
 import { BoundingBoxes } from '../../../components/bounding-boxes';
-import { ImageDimensions, PositionMap, ZoomLevels } from '../../../types/types';
+import { useAppSelector } from '../../../redux/hooks';
+import { DocImage, ZoomLevels } from '../../../types/types';
 import { RefObject } from 'react';
 
 interface DocumentViewerProps {
   zoom: ZoomLevels;
   setZoom: (zoom: ZoomLevels) => void;
-  imgDims: ImageDimensions;
-  setImgDims: (dims: ImageDimensions) => void;
-  positionMap: PositionMap;
-  selectedIds: number[];
+  positionMap: Map<string, number[]>;
   hoveredId: number | null;
   imgRef: RefObject<HTMLImageElement | null>;
-  imgSrc: string;
+  imgProps: DocImage;
   onMouseMove: (e: React.MouseEvent<HTMLDivElement>) => void;
   onMouseLeave: () => void;
 }
 
-
 export const DocumentViewer = ({
   zoom,
   setZoom,
-  imgDims,
-  setImgDims,
   positionMap,
-  selectedIds,
   hoveredId,
   imgRef,
-  imgSrc,
+  imgProps,
   onMouseMove,
   onMouseLeave,
 }: DocumentViewerProps) => {
+  const selectedIds = useAppSelector(state => state.fields.selectedIds);
   return (
     <main className="flex-1 flex flex-col items-center px-40 py-10">
       <div className="w-full">
@@ -51,26 +46,23 @@ export const DocumentViewer = ({
           onMouseLeave={onMouseLeave}
         >
           <div
-            className=""
             style={{
               transform: zoom === 'fit' ? 'scale(1)' : `scale(${parseInt(zoom) / 100})`,
             }}
           >
             <img
               ref={imgRef}
-              src={`/${imgSrc}`}
+              src={`/${imgProps.url}`}
               alt="Document Preview"
               className="object-contain"
-              onLoad={(e) => setImgDims({
-                width: e.currentTarget.naturalWidth,
-                height: e.currentTarget.naturalHeight
-              })}
             />
+
+            {/* Bounding boxes */}
             <BoundingBoxes
-              selectedIds={selectedIds}
               hoveredId={hoveredId}
               positionMap={positionMap}
-              imgDims={imgDims}
+              selectedIds={selectedIds}
+              imgProps={imgProps}
               imgRef={imgRef}
             />
           </div>

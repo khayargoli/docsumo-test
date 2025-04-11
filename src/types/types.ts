@@ -60,14 +60,13 @@ export interface Content {
   value: string | number;
 }
 
+
+export interface DocImage {
+  height: number; url: string; width: number;
+}
+
 export type ZoomLevels = 'fit' | '75%' | '100%';
 export interface PositionMap {
   [key: string]: number[];
 }
-
-export interface ImageDimensions {
-  width: number;
-  height: number;
-}
-
 export type Tabs = 'regular' | 'column';

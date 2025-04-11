@@ -44,7 +44,7 @@ export const FieldItem = ({
         <li
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
-            className={`mb-3 p-2 border rounded flex items-center justify-between ${selected ? 'bg-blue-50' : ''} ${hovered ? 'ring-2 ring-blue-400' : ''}`}
+            className={`mb-3 p-2 border rounded flex items-center justify-between ${selected ? 'bg-blue-50' : ''} ${hovered ? 'border-2 border-blue-400' : ''}`}
         >
             <div className="flex items-center gap-2">
                 <span className={`w-8 h-8 flex items-center justify-center text-sm font-bold rounded-md`} style={{ backgroundColor: badgeColor }}>

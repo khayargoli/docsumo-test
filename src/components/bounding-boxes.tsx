@@ -1,10 +1,10 @@
-import { PositionMap, ImageDimensions } from "../types/types";
+import { DocImage } from "../types/types";
 
 interface BoundingBoxesProps {
     selectedIds: number[];
     hoveredId: number | null;
-    positionMap: PositionMap;
-    imgDims: ImageDimensions;
+    positionMap: Map<string, number[]>;
+    imgProps: DocImage;
     imgRef: React.RefObject<HTMLImageElement | null>;
 }
 
@@ -12,25 +12,28 @@ export const BoundingBoxes = ({
     selectedIds,
     hoveredId,
     positionMap,
-    imgDims,
+    imgProps,
     imgRef,
 }: BoundingBoxesProps) => {
+
     const hoveredIds = hoveredId ? [hoveredId] : [];
     const allIds = [...selectedIds, ...hoveredIds];
     const uniqueAllIds = Array.from(new Set(allIds));
 
+    /* Draws rectangle from retreiving boundingbox coordinates from fieldId */
     return (
         <>
             {uniqueAllIds.map(id => {
-                const box = positionMap[id.toString()];
-                if (!box || box.length !== 4) return null;
+                const box = positionMap.get(id.toString());
+                if (!box || box.length !== 4 || !imgRef.current) return null;
 
                 const [x1, y1, x2, y2] = box;
-                const scaleX = imgRef.current ? imgRef.current.clientWidth / imgDims.width : 1;
-                const scaleY = imgRef.current ? imgRef.current.clientHeight / imgDims.height : 1;
+                const scaleX = imgRef.current.clientWidth / imgProps.width;
+                const scaleY = imgRef.current.clientHeight / imgProps.height;
 
-                const w = x2 - x1;
-                const h = y2 - y1;
+                const width = x2 - x1;
+                const height = y2 - y1;
+
                 return (
                     <div
                         key={id}
@@ -38,8 +41,8 @@ export const BoundingBoxes = ({
                         style={{
                             left: x1 * scaleX,
                             top: y1 * scaleY,
-                            width: w * scaleX,
-                            height: h * scaleY,
+                            width: width * scaleX,
+                            height: height * scaleY,
                         }}
                     />
                 );
